@@ -74,27 +74,27 @@ search_tree = defaultdict(list)
 
 
 def contains_any(text, trie):
-	search_index = defaultdict(list)
+	potential_nodes = []
 
 	for i, char in enumerate(text):
-		if i in search_index:
-			indexed_nodes = search_index[i]
+		if len(potential_nodes) != 0:
+			new_potential_nodes = []
 
-			for node in indexed_nodes:
+			for node in potential_nodes:
 				if len(node.children) == 0:
 					return True, node.get_word()
 
 				potential_new_index_node = node.lookup(char)
 
 				if potential_new_index_node:
-					search_index[i + 1].append(potential_new_index_node)
+					new_potential_nodes.append(potential_new_index_node)
 
-			del search_index[i]
+			potential_nodes = new_potential_nodes
 
 		potential_sub_node = trie.lookup(char)
 
 		if potential_sub_node:
-			search_index[i + 1].append(potential_sub_node)
+			potential_nodes.append(potential_sub_node)
 
 	return False, None
 
